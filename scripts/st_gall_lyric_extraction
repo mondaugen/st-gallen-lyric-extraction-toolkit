@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+
+# This just simply runs the st_gall_lyric_extraction toolkits main function
+
+from gamera.toolkits.st_gall_lyric_extraction import main
+
+main.main()

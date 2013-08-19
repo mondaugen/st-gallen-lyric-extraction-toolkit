@@ -1,0 +1,32 @@
+Wed  7 Aug 19:03:53 2013
+Figured out how to install the toolkit.
+What's odd is that it seems like the toolkit must be install using the
+command:
+
+CFLAGS="-I/Users/nickesterer/Documents/development/Gamera/include" sudo python \
+setup.py build && sudo python setup.py install && sudo python setup.py install_scripts;
+
+and you can't use
+
+pip install -e .
+
+(although now that I think of it it might work if you specify the CFLAGS
+properly)
+
+But what makes me talk about this is that I was having trouble installing
+gamera version 3.3.3 from source using the sudo python setup.py build ... etc
+commands and instead had to use the pip method. The problem I was having was
+that it would appear to install but then would not find the module when
+running
+
+from gamera.core import *
+
+In the more recent case of installing the plugin, I would have a similar
+problem in that it would not find the module when running
+
+from gamera.toolkits import st_gall_lyric_extraction
+
+Note that I am installing into a virtual environment (created with
+virtualenv).
+
+Just thought I'd write that down.

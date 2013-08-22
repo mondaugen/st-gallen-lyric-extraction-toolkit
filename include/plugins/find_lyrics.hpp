@@ -1,6 +1,7 @@
 #ifndef FIND_LYRICS_HPP
 #define FIND_LYRICS_HPP 
 
+#include <stdio.h> 
 #include "gamera.hpp"
 //#include "plugins/draw.hpp"
 //#include "plugins/segmentation.hpp"

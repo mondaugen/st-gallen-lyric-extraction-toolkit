@@ -3,6 +3,7 @@ LICENSE
 MANIFEST.in
 README
 rename.py
+/Users/nickesterer/Documents/development/st-gall-lyric-extraction-tk-py-only/gamera/toolkits/st_gall_lyric_extraction/plugins/_find_lyrics.cpp
 /Users/nickesterer/Documents/development/st-gall-lyric-extraction-tk/gamera/toolkits/st_gall_lyric_extraction/plugins/_find_lyrics.cpp
 doc/gendoc.py
 doc/src/default.css

@@ -12,11 +12,11 @@ ccs = onebit.cc_analysis()
 
 print "Number of ccs before", len(ccs)
 
-func = find_lyrics.remove_ccs_intersected_by_lines()
+func = find_lyrics.remove_ccs_intersected_by_lines
 
-lines = [(float(1),float(x * 10)) for x in xrange(20)]
+lines = [(float(1),float(x * 10) - 200) for x in xrange(40)]
 
-newccs = func(ccs, lines)
+newccs = func(ccs, lines, 0)
 
 print "Number of newccs after", len(newccs)
 print "Number of ccs after", len(ccs)
@@ -31,17 +31,3 @@ for cc in newccs:
   img.highlight(cc, RGBPixel(255,0,0))
 
 img.save_PNG("/Users/nickesterer/Desktop/find_lyrics_test_1.png")
-
-for x, y in zip(ccs, newccs):
-  print "Id's same?", (id(x) == id(y))
-
-del(ccs)
-del(newccs)
-
-# print "Sleeping...",
-# for i in xrange(10):
-#   time.sleep(1)
-#   print '.',
-# print
-
-#import pdb; pdb.set_trace()

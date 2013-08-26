@@ -4,8 +4,6 @@ Algorithms for finding lines that cross over the lyrics in staffless music. The
 lyrics may have a skewed trajectory. After estimating these lines, an algorithm
 exists for removing connected components found beneath a given line.
 
-See tests/ for some example workflows.
-
 By Nicholas Esterer
 
 nicholas [dot] esterer [at] gmail [dot] com
@@ -14,23 +12,24 @@ Peak detection algorithm contributed by Gabriel Vigliensoni
 
 gabriel [at] vigliensoni [dot] com
 
+Usage:
+
+See tests/ for some example workflows.
+
 Installing:
 
-See clean-alt-build-script.bash. You will have to change the CFLAGS export to
-something like this:
+Navigate to the root of the source tree (at the same level as this readme file).
+
+Set the CFLAGS environment variable to something like this:
 
 export CFLAGS="-Wall -O0 -g -I/path/to/the/gamera/build/include/directory"
 
-(see clean-alt-build-script.bash for an idea of what this path looks like)
-I suggest copying clean-alt-build-script.bash to something like
-my-clean-alt-build-script.bash and then making the change.
-Then do:
-
-chmod u+x ./my-clean-alt-build-script.bash
+(see clean-alt-build-script-plugin-testing-env-26-8-13.bash for an idea of what
+this path looks like)
 
 you should then be able to install by doing:
 
-./my-clean-alt-build-script.bash
+./clean-alt-build-script.bash
 
 See the Gamera documentation related to writing toolkits for more information on
 how to install toolkits.

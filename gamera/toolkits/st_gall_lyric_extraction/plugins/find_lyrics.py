@@ -1,12 +1,11 @@
 from gamera.plugin import *
-# Implementation in Pure Python because I'm having segfaulting problems with C++
-
 import _find_lyrics
-
 import sys
 import os
  
 def peakdet(v, delta, minimum_y_threshold = 500, minimum_x_threshold = 50, x = None):
+    # For whatever reason, the build fails when importing these at the top of
+    # this script
     from numpy import NaN
     from numpy import Inf
     from numpy import arange
@@ -122,16 +121,24 @@ class CCContainsFunction:
     return False
 
 def slope_intercept_from_points(p0, p1):
+  """
+  Given two different points on a line, return the slope and y-intercept
+  representing that line i.e., m and b in the equation y = m * x + b.
+  """
   x0, y0 = p0
   x1, y1 = p1
+  if (x0 == x1) and (y0 == y1):
+    raise ValueError(("The points must be different, instead got: "
+        + "x0=%f y0=%f x1=%f y1=%f") % (x0,y0,x1,y1))
   m = float(y1 - y0)/float(x1 - x0)
   b = m * float(x0) + float(y0)
   return (m, b)
 
-def _find_blackest_lines( img, minimum_y_threshold, num_searches, negative_bound, \
-                          positive_bound, delta):
-  # The horizontal projection of the image
-  hp = img.projection_rows()
+def _find_blackest_lines( img, horizontal_projections, minimum_y_threshold,
+    num_searches, negative_bound, positive_bound, delta):
+
+  # The horizontal projections of the image
+  hp = horizontal_projections
 
   # Find peaks in the horizontal projection
   maxtab, mintab = peakdet(hp,delta,minimum_y_threshold)
@@ -145,43 +152,44 @@ def _find_blackest_lines( img, minimum_y_threshold, num_searches, negative_bound
   ccs = img.cc_analysis()
 
   for ys in peaksy:
+    # A list of y coordinates with which to create lines is compiled. These
+    # y-coordinates are at each division of the distance spanned by the positive
+    # bound and negative bound extending out upward and downward from the
+    # horizontal projection peak respectively. The number of divisions is given
+    # by num_searches.
     y_ends = ([ys - negative_bound + (positive_bound + negative_bound) * (float(i) + 0.5)
               / num_searches for i in xrange(int(num_searches)) ])
 
     # Filter out y_ends that are above the upper right corner or below the lower
-    # left
+    # left corner.
     y_ends = filter(lambda item: ((item > img.ul.y) and (item < img.lr.y)), y_ends)
 
-    print "Y_ENDS:", y_ends
-
+    # Lines are made from the points [(y_end[0],img.ul.x),(y_end[-1],img.lr.x)],
+    # [(y_end[1],img.ul.x),(y_end[-2],img.lr.x)], ...
     black_counts = ([ img.count_black_under_line_points(img.ul.x, yl,
       img.lr.x, yr) for yl, yr in zip(reversed(y_ends), y_ends) ])
-
-    print "BLACK_COUNTS:", black_counts
 
     blackest_idx = black_counts.index(max(black_counts))
 
     # Line is returned as array of two points [(x0,y0),(x1,y1)]
+    # It finds the pair of points making the line that gives the highest
+    # black-count
     blackest_lines.append([(img.ul.x, y_ends[ len(y_ends) - blackest_idx - 1 ]),
       (img.lr.x, y_ends[ blackest_idx ])])
-
-    print
-    print "Most recent blackest line:", blackest_lines[-1]
-    print
 
   return blackest_lines
 
 
 class find_blackest_lines(PluginFunction):
   """
-  Operates on a binarised image. Finds local peaks in the horizontal projections
-  of the image. This means it adds up the number of times black is seen in a row
-  and stores the value for each row in an array. It then finds local peaks in
-  this array. It then draws a bunch of lines on the image, all pivoting around
-  the centres of the horizontal projections. It discards all but the lines that
-  cross the most black pixels and returns the start and end points of these
-  lines, e.g. [ [(x00,y00),(x01,y01)], [(x10,y10),(x11,y11)], ....
-                [(xn0,yn0),(xn1,yn1)] ].
+  Operates on a binarised image and a list of its horizontal projections. Finds
+  local peaks in the horizontal projections of the image. This means it adds up
+  the number of times black is seen in a row and stores the value for each row
+  in an array. It then finds local peaks in this array. It then draws a bunch of
+  lines on the image, all pivoting around the centres of the horizontal
+  projections. It discards all but the lines that cross the most black pixels
+  and returns the start and end points of these lines, e.g.
+  [ [(x00,y00),(x01,y01)], [(x10,y10),(x11,y11)], ... [(xn0,yn0),(xn1,yn1)] ].
 
   Parameters:
 
@@ -208,10 +216,11 @@ class find_blackest_lines(PluginFunction):
   pure_python = True
 
   @staticmethod
-  def __call__(self, minimum_y_threshold, num_searches, \
-                  negative_bound, positive_bound, delta=10):
-    return _find_blackest_lines(self, minimum_y_threshold, num_searches, \
-                  negative_bound, positive_bound, delta)
+  def __call__(self, horizontal_projections, minimum_y_threshold, num_searches,
+      negative_bound, positive_bound, delta=10):
+    return _find_blackest_lines(self, horizontal_projections,
+        minimum_y_threshold, num_searches, negative_bound, positive_bound,
+        delta)
 
 
 def remove_ccs_intersected_by_func(ccs, func, pixel_value):
@@ -263,15 +272,6 @@ class count_black_under_line_points(PluginFunction):
   return_type = Int("num_black_pixels")
   args = Args([Real("x0"), Real("y0"), Real("x1"), Real("y1")])
   doc_examples = [(ONEBIT,)]
-
-#class hl_ccs_under_lines(PluginFunction):
-#  """
-#  Works on a binarised image. Returns an rgb image with the ccs that the lines
-#  crossed colored a given color.
-#  """
-#  self_type = ImageType([ONEBIT])
-#  args = Args([Class("list_m_b_pairs"), Pixel("PixelValue")])
-#  return_type = ImageType([RGB])
 
 class Count_under_funcModule(PluginModule):
   category = "Analysis"

@@ -1,6 +1,7 @@
 #!/bin/bash
 sudo pip uninstall st_gall_lyric_extraction
-sudo rm -r /Users/nickesterer/Documents/development/gamera_3.3.3_env/\
+sudo rm -r \
+/Users/nickesterer/Documents/development/env/plugin-testing-env-26-8-13/\
 lib/python2.7/site-packages/gamera/toolkits/st_gall_lyric_extraction
 sudo rm -r ./build
 sudo rm ./gamera/toolkits/st_gall_lyric_extraction/plugins/_find_lyrics.so

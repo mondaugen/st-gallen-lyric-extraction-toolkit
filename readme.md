@@ -4,7 +4,7 @@ Algorithms for finding lines that cross over the lyrics in staffless music. The
 lyrics may have a skewed trajectory. After estimating these lines, an algorithm
 exists for removing connected components found beneath a given line.
 
-See /tests for some example workflows.
+See tests/ for some example workflows.
 
 By Nicholas Esterer
 
@@ -40,3 +40,6 @@ http://gamera.sourceforge.net/doc/html/writing_toolkits.html#building-and-instal
 The python documentation on Installing Python Modules can be helpful, too.
 
 http://docs.python.org/2.7/install/index.html
+
+See doc/st-gall-lyric-extraction-diagram-1.pdf for a diagram explaining the
+algorithm.

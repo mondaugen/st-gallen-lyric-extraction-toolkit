@@ -1,6 +1,6 @@
 St. Gallen Lyric Extraction
 
-Algorithms for finding lines that cross over the lyrics on staffless music. The
+Algorithms for finding lines that cross over the lyrics in staffless music. The
 lyrics may have a skewed trajectory. After estimating these lines, an algorithm
 exists for removing connected components found beneath a given line.
 
@@ -8,6 +8,7 @@ See /tests for some example workflows.
 
 By Nicholas Esterer
 nicholas [dot] esterer [at] gmail [dot] com
+
 Peak detection algorithm contributed by Gabriel Vigliensoni
 gabriel [at] vigliensoni [dot] com
 

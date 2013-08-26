@@ -1,0 +1,7 @@
+on  csg_0390 I ran the algorithm with a minimum_y_threshold of 400,
+num_searches of 80 and both positive and negative bounds of 100, e.g.,
+
+python ./tests/find_lyrics_test_2.py /path/to/csg-0390_123.png \
+/path/to/some/destination/folder 400 80 100 100
+
+with reasonable results (N.E. August 2013)

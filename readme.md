@@ -43,3 +43,6 @@ http://docs.python.org/2.7/install/index.html
 
 See doc/st-gall-lyric-extraction-diagram-1.pdf for a diagram explaining the
 algorithm.
+
+Look in logs/ to see some examples of parameters that users of the algorithm
+have found useful.

@@ -76,7 +76,7 @@ print "Number of ccs before", len(ccs)
 
 # Remove the connected components intersected by the lines, this effectively
 # removes the lyrics
-newccs = find_lyrics.remove_ccs_intersected_by_lines(ccs, mb_lines, 0)
+newccs = find_lyrics.remove_ccs_intersected_by_lines(ccs, mb_lines)
 
 print "Number of newccs after", len(newccs)
 

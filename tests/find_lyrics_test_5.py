@@ -79,9 +79,17 @@ mb_lines = [find_lyrics.slope_intercept_from_points(p0,p1) for p0, p1 in lines]
 
 print "Number of ccs before", len(ccs)
 
+print "Ids of ccs before"
+for cc in ccs:
+  print cc.label
+
 # Remove the connected components intersected by the lines, this effectively
 # removes the lyrics
-newccs = find_lyrics.remove_ccs_intersected_by_lines(ccs, mb_lines, 0)
+newccs = find_lyrics.remove_ccs_intersected_by_lines(ccs, mb_lines)
+
+print "Ids of ccs after"
+for cc in newccs:
+  print cc.label
 
 print "Number of newccs after", len(newccs)
 
@@ -93,9 +101,15 @@ for m, b in mb_lines:
                 FloatPoint(onebit.lr.x, m * onebit.lr.x + b), 
                 RGBPixel(0,0,0))
 
+# Assert that set doesn't remove ccs
+print "set() doesn't remove ccs", len(set(ccs)) == len(ccs)
+print "set() doesn't remove newccs", len(set(newccs)) == len(newccs)
+
 # Here we highlight which ccs were removed, so we want to highlight the
 # complement of the remaining set of ccs
+print "Highlighting ccs"
 for cc in set(ccs) - set(newccs):
+  print "highlighting: ", cc.label
   img.highlight(cc, RGBPixel(255,0,0))
 
 # Prepare a path where the resulting image will be saved to

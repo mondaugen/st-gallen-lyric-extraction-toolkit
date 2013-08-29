@@ -108,16 +108,23 @@ class CCContainsFunction:
   A class that can be called like a function and returns true if the function it
   contains goes through a given connected component and false if it doesn't.
   """
-  def __init__(self, func, pixel_value):
+  def __init__(self, func):
     self.func = func
-    self.pixel_value = pixel_value
 
   def __call__(self, cc):
+#    print "Checking if cc", cc.label, "contains function."
     for x in xrange(cc.ul.x, cc.lr.x + 1):
       y = round(self.func(float(x)))
       if (y >= cc.ul.y) and (y <= cc.lr.y):
-        if cc.get((x - cc.ul.x, y - cc.ul.y)) == self.pixel_value:
+#        print "Pixel value at (%d,%d):" % (x, y)
+        pixel_value = cc.get((x - cc.ul.x, y - cc.ul.y))
+#        print pixel_value,
+        # The cc is 'black' when the pixel value gotten is the same as the ccs
+        # label
+        if pixel_value == cc.label:
+#          print
           return True
+#    print
     return False
 
 def slope_intercept_from_points(p0, p1):
@@ -209,8 +216,9 @@ class find_blackest_lines(PluginFunction):
     delta: see the delta parameter for the peakdet function above
   """
   self_type = ImageType([ONEBIT])
-  args = Args([ Int("minimum_y_threshold"), Int("num_searches"), \
-                Int("negative_bound"), Int("positive_bound"), \
+  args = Args([ Class('horizontal_projections', list),
+                Int("minimum_y_threshold"), Int("num_searches"),
+                Int("negative_bound"), Int("positive_bound"),
                 Int("delta") ])
   return_type = Float("area")
   pure_python = True
@@ -223,18 +231,18 @@ class find_blackest_lines(PluginFunction):
         delta)
 
 
-def remove_ccs_intersected_by_func(ccs, func, pixel_value):
-  ccContainsFunc = CCContainsFunction(func, pixel_value)
+def remove_ccs_intersected_by_func(ccs, func):
+  ccContainsFunc = CCContainsFunction(func)
   return [cc for cc in ccs if not ccContainsFunc(cc)]
 
 
-def remove_ccs_intersected_by_lines(ccs, list_m_b_pairs, pixel_value):
+def remove_ccs_intersected_by_lines(ccs, list_m_b_pairs):
   """
   Accept a list of ccs and a list of (slope,y-intercept) tuples and return a
   list of ccs that weren't crossed by any of the line functions in lines.
   """
   for m, b in list_m_b_pairs:
-    ccs = remove_ccs_intersected_by_func(ccs, LineSegment(m,b), pixel_value)
+    ccs = remove_ccs_intersected_by_func(ccs, LineSegment(m,b))
   return ccs
 
 
